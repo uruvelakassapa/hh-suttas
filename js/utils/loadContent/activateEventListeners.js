@@ -28,11 +28,11 @@ export function activateEventListeners(availableSuttasJson)
     activateThemeButton();
     activateRefreshButton();
     activateErrorButton();
-    activateCacheButton();
+    // activateCacheButton();
     activateInfoButton();
     activateHideNotificationBoxWhenClickingOutside();
-    activateEPUBInfoButton();
-    activateDownloadEPUBButton();
+    // activateEPUBInfoButton();
+    // activateDownloadEPUBButton();
     activateMessageListener();
     
     if (!window.location.href.endsWith("/bookmarks.html") && !window.location.href.endsWith("/glossary.html") && !window.location.href.endsWith("/comments.html")){

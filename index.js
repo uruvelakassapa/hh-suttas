@@ -44,6 +44,7 @@ import { displaySuttas } from "./js/utils/contentSections/displaySuttas.js";
 import { activateEventListeners } from "./js/utils/loadContent/activateEventListeners.js";
 import { fetchAvailableSuttas } from "./js/utils/loadContent/fetchAvailableSuttas.js";
 import initializeSideBySide from "./js/utils/loadContent/initializeSideBySide.js";
+import { intialiseSettingsPanel } from "./js/utils/misc/settingsPanel.js";
 import { toggleTheme } from "./js/utils/misc/toggleTheme.js";
 import { buildSutta } from "./js/utils/loadContent/buildSutta.js";
 import updateSuttaDatabase from './js/database/updateSuttaDatabase.js';
@@ -68,6 +69,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       updateSuttaDatabase();
       activateEventListeners(availableSuttasJson);
       initializeSideBySide();
+      intialiseSettingsPanel();
       toggleTheme(initialThemeSetting);
 
   } catch (error) {

@@ -1,42 +1,71 @@
-export function addNavbar() 
-{
-    // Add the navbar to the page
-    const navbar = document.createElement('div');
-    navbar.id = 'suttanav'; // Added ID
-    navbar.innerHTML = document.title;
-    document.body.appendChild(navbar);
-  
-    let lastScrollTop = 0; // variable to store the last scroll position
-    const scrollThreshold = 10;
-    let isScrolling = false;
-    let scrollTimeout;
-  
-    window.addEventListener('scroll', () => {
-      if (!isScrolling) {
-        isScrolling = true;
-        requestAnimationFrame(() => {
-          let currentScrollTop = window.scrollY || document.documentElement.scrollTop;
-  
-          // Detect sudden jump
-          if (Math.abs(currentScrollTop - lastScrollTop) > 100) {
-            // If the jump is large, do not show the navbar
-            navbar.style.top = '-50px';
-          } else if (Math.abs(currentScrollTop - lastScrollTop) > scrollThreshold) {
-            // Only apply the scroll behavior if it's a regular scroll (not a sudden jump)
-            navbar.style.top = currentScrollTop < 170 || currentScrollTop > lastScrollTop ? '-50px' : '0';
-          }
-  
-          lastScrollTop = currentScrollTop;
-          isScrolling = false;
-        });
+
+import { intialiseSettingsPanel } from "../misc/settingsPanel.js";
+export function addNavbar() {
+  // Add the navbar to the page
+  const navbar = document.createElement('div');
+  navbar.id = 'suttanav'; // Added ID
+  // navbar.innerHTML = document.title;
+
+  // Create a container for the navbar contents to allow flexibility for positioning
+  const navbarContent = document.createElement('div');
+  navbarContent.style.display = 'flex';
+  navbarContent.style.justifyContent = 'space-between';
+  navbarContent.style.width = '100%';
+
+  // Create a div for the title to stay on the left side
+  const navbarTitle = document.createElement('div');
+  navbarTitle.innerText = document.title;
+
+  // Create the settings button
+  const settingsButton = document.createElement('button');
+  settingsButton.id = 'navbar-settings-button';
+  settingsButton.className = 'icon-button';
+  settingsButton.innerHTML = '⚙️'; // Using an icon inside the button
+
+  // Append title and settings button to the navbar content container
+  navbarContent.appendChild(navbarTitle);
+  navbarContent.appendChild(settingsButton);
+
+  // Append the content container to the navbar
+  navbar.appendChild(navbarContent);
+  document.body.appendChild(navbar);
+
+  // After appending, get the navbar's height
+  const navbarHeight = 50;
+
+  let lastScrollTop = window.scrollY || document.documentElement.scrollTop;
+  const showThreshold = 1; // Threshold for showing the navbar when scrolling up
+  const suddenJumpThreshold = 100; // Threshold for sudden jumps
+  const topHideThreshold = 170; // Threshold for hiding navbar near the top
+
+  // Get the settings panel to control its visibility
+  const settingsPanel = document.getElementById('settings-panel');
+  window.addEventListener('scroll', () => {
+    requestAnimationFrame(() => {
+      let currentScrollTop = window.scrollY || document.documentElement.scrollTop;
+      let scrollDelta = currentScrollTop - lastScrollTop;
+
+      if (Math.abs(scrollDelta) > suddenJumpThreshold) {
+        // Sudden jump, hide the navbar
+        navbar.style.top = -navbarHeight + 'px';
+        settingsPanel.classList.remove('visible');
+      } else if (currentScrollTop < topHideThreshold) {
+        // Near the top, hide the navbar
+        navbar.style.top = -navbarHeight + 'px';
+        settingsPanel.classList.remove('visible');
+      } else if (scrollDelta > 0) {
+        // Scrolling down, hide navbar immediately
+        navbar.style.top = -navbarHeight + 'px';
+        settingsPanel.classList.remove('visible');
+      } else if (scrollDelta < -showThreshold) {
+        // Scrolling up beyond the threshold, show navbar
+        navbar.style.top = '0';
       }
-  
-      // Clear any previous timeout
-      clearTimeout(scrollTimeout);
-  
-      // Set a timeout to handle the case when the user stops scrolling
-      scrollTimeout = setTimeout(() => {
-        isScrolling = false;
-      }, 100);
+
+      lastScrollTop = currentScrollTop;
     });
-  }
+  });
+
+  // Initialize the settings panel
+  intialiseSettingsPanel('navbar-settings-button', 'navbar'); // Settings panel for the navbar
+}

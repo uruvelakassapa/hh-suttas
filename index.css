@@ -819,6 +819,55 @@ bookmarkButton{
   }
 }
 
+#settings-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.settings-container {
+  position: relative;
+  display: inline-block; /* Ensures container only takes up necessary space */
+}
+
+#settings-panel {
+  position: absolute;
+  top: 100%; /* Positions the panel right below the button */
+  left: -3em;
+  background: #f0f3c9;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  display: none; /* Hidden by default */
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000; /* Ensures the panel appears above other elements */
+}
+
+.dark #settings-panel{
+  background: #7b7b7b;
+}
+
+#settings-panel.visible {
+  display: flex; /* Or 'block', depending on your layout */
+}
+
+.settings-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#reset-settings {
+  background: #ff6600;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 .box-button {
   display: block;
   margin: 5px;
