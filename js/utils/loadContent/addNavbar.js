@@ -41,30 +41,34 @@ export function addNavbar() {
   // Get the settings panel to control its visibility
   const settingsPanel = document.getElementById('settings-panel');
   window.addEventListener('scroll', () => {
-    requestAnimationFrame(() => {
-      let currentScrollTop = window.scrollY || document.documentElement.scrollTop;
-      let scrollDelta = currentScrollTop - lastScrollTop;
+    if (scrollTimer !== null) {
+        clearTimeout(scrollTimer);
+    }
 
-      if (Math.abs(scrollDelta) > suddenJumpThreshold) {
-        // Sudden jump, hide the navbar
-        navbar.style.top = -navbarHeight + 'px';
-        settingsPanel.classList.remove('visible');
-      } else if (currentScrollTop < topHideThreshold) {
-        // Near the top, hide the navbar
-        navbar.style.top = -navbarHeight + 'px';
-        settingsPanel.classList.remove('visible');
-      } else if (scrollDelta > 0) {
-        // Scrolling down, hide navbar immediately
-        navbar.style.top = -navbarHeight + 'px';
-        settingsPanel.classList.remove('visible');
-      } else if (scrollDelta < -showThreshold) {
-        // Scrolling up beyond the threshold, show navbar
-        navbar.style.top = '0';
-      }
-
-      lastScrollTop = currentScrollTop;
-    });
-  });
+    const currentScrollTop = window.scrollY || document.documentElement.scrollTop;
+    
+    // Show navbar when scrolling up beyond threshold
+    if (currentScrollTop < lastScrollTop && currentScrollTop > 170) {
+        if (!isVisible) {
+            navbar.style.top = '0';
+            isVisible = true;
+        }
+    } 
+    // Hide navbar when at top or scrolling down
+    else if (currentScrollTop <= 170 || currentScrollTop > lastScrollTop) {
+        if (isVisible) {
+            navbar.style.top = '-50px';
+            isVisible = false;
+        }
+    }
+    
+    lastScrollTop = currentScrollTop;
+    
+    // Reset scroll state after scrolling stops
+    scrollTimer = setTimeout(() => {
+        scrollTimer = null;
+    }, 150);
+}, { passive: true });
 
   // Initialize the settings panel
   intialiseSettingsPanel('navbar-settings-button', 'navbar'); // Settings panel for the navbar
